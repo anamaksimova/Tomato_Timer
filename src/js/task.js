@@ -11,6 +11,9 @@ export class Task {
   get counter() {
     return this.#counter;
   }
+  set counter(value) {
+     this.#counter = value;
+  }
   constructor(title, counter = 0) {
     this.#id = Math.round(Math.random() * 1000);
     this.#title = title;
