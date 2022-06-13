@@ -12,7 +12,7 @@ export class Task {
     return this.#counter;
   }
   set counter(value) {
-     this.#counter = value;
+    this.#counter = value;
   }
   constructor(title, counter = 0) {
     this.#id = Math.round(Math.random() * 1000);
@@ -27,5 +27,43 @@ export class Task {
   changeTitle(newTitle) {
     this.#title = newTitle;
     return this;
+  }
+
+  execute() {
+    throw new Error('Not implemented');
+  }
+}
+
+
+export class ImportantTask extends Task {
+  constructor(title, counter = 0) {
+    super(title, counter);
+    this.importance = 'important';
+  }
+  execute() {
+    console.log(`Task ${this.title} is very ${this.importance}`);
+    return;
+  }
+}
+
+export class StandartTask extends Task {
+  constructor(title, counter = 0) {
+    super(title, counter);
+    this.importance = 'standart';
+  }
+  execute() {
+    console.log(`Task ${this.title} is very ${this.importance}`);
+    return;
+  }
+}
+
+export class LittleTask extends Task {
+  constructor(title, counter = 0) {
+    super(title, counter);
+    this.importance = 'little';
+  }
+  execute() {
+    console.log(`Task ${this.title} is very ${this.importance}`);
+    return;
   }
 }

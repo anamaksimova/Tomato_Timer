@@ -1,13 +1,19 @@
-import {Task} from './task.js';
+import {Task, ImportantTask,
+  StandartTask,
+  LittleTask} from './task.js';
 export class Tomato {
-  activeTask = null;
+  activeTask = null; importantTask;
 
   constructor({timeForTask = 25, timePause = 5,
     timeBigPause = 15, tasks = []}) {
+    if (Tomato._instance) {
+      return Tomato._instance;
+    }
     this.timeForTask = timeForTask;
     this.timePause = timePause;
     this.timeBigPause = timeBigPause;
     this.tasks = tasks;
+    Tomato._instance = this;
   }
 
   addTask(task) {
@@ -15,6 +21,25 @@ export class Tomato {
     this.tasks.push(task);
     console.log('tasks: ', this.tasks, id, title, counter);
     return id;
+  }
+
+  operation(title, counter, importance) {
+    const Task = importance === 'important' ? ImportantTask :
+    importance === 'standart' ? StandartTask : LittleTask;
+    const task = new Task(title, counter);
+    this.addTask(task);
+  }
+
+  showOperations() {
+    const output = [];
+    for (const item of this.tasks) {
+      output.push({
+        operation: item.constructor.name,
+        title: item.title,
+        counter: item.counter,
+      });
+    }
+    console.table(output);
   }
 
   activateTask(taskId) {
@@ -43,8 +68,8 @@ export class Tomato {
       const {id, title, counter} = this.activeTask;
       let time = counter * 60;
       const timer = setInterval(() => {
-        let seconds = time % 60;
-        let minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        const minutes = Math.floor(time / 60);
         if (time <= 0) {
           clearInterval(timer);
           this.activeTask = null;
@@ -70,8 +95,13 @@ const task = new Task('taskk', 1);
 console.log('task: ', task.title, task.counter);
 
 const tomato = new Tomato({});
-const id = tomato.addTask(task);
-console.log('task.addTask(): ', id);
-tomato.activateTask(id);
-tomato.increaseTimerForTask(id);
-tomato.runActiveTask();
+// const id = tomato.addTask(task);
+// console.log('task.addTask(): ', id);
+// tomato.activateTask(id);
+// tomato.increaseTimerForTask(id);
+// tomato.runActiveTask();
+tomato.operation('one', 1, 'little');
+tomato.operation('two', 2, 'important');
+tomato.operation('three', 3, 'standart');
+console.log(tomato.tasks);
+tomato.showOperations();
