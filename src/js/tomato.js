@@ -1,11 +1,12 @@
 import {Task, ImportantTask,
   StandartTask,
   LittleTask} from './task.js';
+import {RenderTomato} from './renderTomato.js';
 export class Tomato {
   activeTask = null; importantTask;
 
   constructor({timeForTask = 25, timePause = 5,
-    timeBigPause = 15, tasks = []}) {
+    timeBigPause = 15, tasks = []}, renderApp = null) {
     if (Tomato._instance) {
       return Tomato._instance;
     }
@@ -13,9 +14,40 @@ export class Tomato {
     this.timePause = timePause;
     this.timeBigPause = timeBigPause;
     this.tasks = tasks;
+    this.renderApp = renderApp;
+    this.renderTomato = null;
     Tomato._instance = this;
   }
 
+  init() {
+    if (this.renderApp) {
+      this.renderTomato = new RenderTomato(this.renderApp, this);
+    }
+    const newTask = document.querySelector('.task-form');
+    newTask.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const taskTitle = document.querySelector('#task-name').value;
+      const taskImportance = document.querySelector('.button-importance').
+          classList.contains('important') ? 'important' :
+   document.querySelector('.button-importance').
+       classList.contains('default') ? 'default' : 'so-so';
+      this.operation(taskTitle, taskImportance);
+
+      this.renderTomato.renderTaskRow(taskTitle, taskImportance);
+    });
+
+    const ul = document.querySelector('.pomodoro-tasks__quest-tasks');
+    ul.addEventListener('click', (e) => {
+      if (e.target.classList.contains('pomodoro-tasks__task-text')) {
+        document.querySelectorAll('.pomodoro-tasks__task-text_active').
+            forEach(element => {
+              element.classList.remove('pomodoro-tasks__task-text_active');
+            });
+        e.target.classList.add('pomodoro-tasks__task-text_active');
+        document.querySelector('.window__panel-title').textContent = e.target.textContent;
+      }
+    });
+  }
   addTask(task) {
     const {id, title, counter} = task;
     this.tasks.push(task);
@@ -23,11 +55,12 @@ export class Tomato {
     return id;
   }
 
-  operation(title, counter, importance) {
+  operation(title, importance, counter = 0) {
     const Task = importance === 'important' ? ImportantTask :
-    importance === 'standart' ? StandartTask : LittleTask;
+    importance === 'default' ? StandartTask : LittleTask;
     const task = new Task(title, counter);
     this.addTask(task);
+    return task;
   }
 
   showOperations() {
@@ -94,14 +127,14 @@ export class Tomato {
 const task = new Task('taskk', 1);
 console.log('task: ', task.title, task.counter);
 
-const tomato = new Tomato({});
+// const tomato = new Tomato({});
 // const id = tomato.addTask(task);
 // console.log('task.addTask(): ', id);
 // tomato.activateTask(id);
 // tomato.increaseTimerForTask(id);
 // tomato.runActiveTask();
-tomato.operation('one', 1, 'little');
-tomato.operation('two', 2, 'important');
-tomato.operation('three', 3, 'standart');
-console.log(tomato.tasks);
-tomato.showOperations();
+// tomato.operation('one', 1, 'little');
+// tomato.operation('two', 2, 'important');
+// tomato.operation('three', 3, 'standart');
+// console.log(tomato.tasks);
+// tomato.showOperations();

@@ -49,7 +49,7 @@ export class ImportantTask extends Task {
 export class StandartTask extends Task {
   constructor(title, counter = 0) {
     super(title, counter);
-    this.importance = 'standart';
+    this.importance = 'default';
   }
   execute() {
     console.log(`Task ${this.title} is very ${this.importance}`);
@@ -60,7 +60,7 @@ export class StandartTask extends Task {
 export class LittleTask extends Task {
   constructor(title, counter = 0) {
     super(title, counter);
-    this.importance = 'little';
+    this.importance = 'so-so';
   }
   execute() {
     console.log(`Task ${this.title} is very ${this.importance}`);

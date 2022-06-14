@@ -7,3 +7,6 @@ import './scss/index.scss';
 // console.log('task: ', task.title, task.counter);
 // task.changeTitle('task2').countUp();
 // console.log('task: ', task.title, task.counter);
+const tomato = new Tomato({}, '.app');
+  tomato.init();
+
