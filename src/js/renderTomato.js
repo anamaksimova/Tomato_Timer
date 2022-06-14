@@ -1,7 +1,7 @@
 export class RenderTomato {
-  constructor(app, tomato) {
+  constructor(app) {
     this.app = app;
-    this.tomato = tomato;
+    // this.tomato = tomato;
     this.init();
   }
 
