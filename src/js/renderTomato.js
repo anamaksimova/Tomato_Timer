@@ -11,11 +11,12 @@ export class RenderTomato {
     document.querySelector(this.app).append(this.list);
   }
 
-  renderTaskRow(title, importance) {
+  renderTaskRow(id, title, importance) {
     const taskRow = document.createElement('li');
     taskRow.classList.add('pomodoro-tasks__list-task', importance);
     const span = document.createElement('span');
     span.classList.add('count-number');
+    span.textContent = id;
     const taskBtn = document.createElement('button');
     taskBtn.classList.add('pomodoro-tasks__task-text');
     taskBtn.textContent = title;

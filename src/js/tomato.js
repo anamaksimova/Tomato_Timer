@@ -50,6 +50,13 @@ export class Tomato {
   activateTask(taskId) {
     this.activeTask = this.tasks.find(x => x.id === taskId);
   }
+   plusZero = (num) => {
+    if (num < 10) {
+      return '0' + num;
+    } else {
+      return num;
+    }
+  };
   runPause() {
     let time = this.timePause * 60;
     const timer = setInterval(() => {
@@ -57,37 +64,54 @@ export class Tomato {
       console.log('seconds: ', seconds);
       const minutes = Math.floor(time / 60);
       console.log('minutes: ', minutes);
+      document.querySelector('.window__timer-text').textContent = `
+      ${this.plusZero(minutes)}:${this.plusZero(seconds)} `;
 
       if (time <= 0) {
         clearInterval(timer);
         console.log('Время паузы закончилось');
+        document.querySelector('.window__timer-text').textContent = `
+          00:00 `;
       } else {
         time--;
         this.timePause = time / 60;
       }
     }, 1000);
+    return timer;
   }
   runActiveTask() {
     if (this.activeTask) {
       const task = this.activeTask;
       const {id, title, counter} = this.activeTask;
-      let time = counter * 60;
+      console.log('id: ', id);
+      let taskCounter = task.counter;
+      if (counter === 0){
+          taskCounter = this.timeForTask; 
+      }
+      let time = taskCounter * 60;
       const timer = setInterval(() => {
         const seconds = time % 60;
         const minutes = Math.floor(time / 60);
+       document.querySelector('.window__timer-text').textContent = `
+       ${this.plusZero(minutes)}:${this.plusZero(seconds)} `;
         if (time <= 0) {
           clearInterval(timer);
           this.activeTask = null;
           console.log('Время закончилось');
+          document.querySelector('.window__timer-text').textContent = `
+          00:00 `;
           this.runPause();
         } else {
           time--;
           task.counter = time / 60;
         }
       }, 1000);
+      return timer;
     } else {
       console.error(`Нет активной задачи`);
     }
+
+  
   }
 
   increaseTimerForTask(taskId) {

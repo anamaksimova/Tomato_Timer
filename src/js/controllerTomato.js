@@ -14,8 +14,9 @@ export class ControllerTomato {
           classList.contains('important') ? 'important' :
    document.querySelector('.button-importance').
        classList.contains('default') ? 'default' : 'so-so';
-      this.tomato.operation(taskTitle, taskImportance);
-      this.page.renderTaskRow(taskTitle, taskImportance);
+      const task = this.tomato.operation(taskTitle, taskImportance);
+      const taskId = task.id;
+      this.page.renderTaskRow(taskId, taskTitle, taskImportance);
     });
 
     const ul = document.querySelector('.pomodoro-tasks__quest-tasks');
@@ -26,8 +27,21 @@ export class ControllerTomato {
               element.classList.remove('pomodoro-tasks__task-text_active');
             });
         e.target.classList.add('pomodoro-tasks__task-text_active');
+        const id = e.target.previousElementSibling.textContent / 1;
+        this.tomato.activateTask(id);
         document.querySelector('.window__panel-title').textContent = e.target.textContent;
       }
+    });
+
+    document.querySelector('.button-primary').addEventListener('click', () => {
+      if (this.timerTaskId) {
+        clearInterval(this.timerTaskId);
+      }
+      clearInterval(this.timerPauseId);
+      this.timerTaskId = this.tomato.runActiveTask();
+    });
+    document.querySelector('.button-secondary').addEventListener('click', () => {
+      clearInterval(this.timerTaskId);
     });
   }
 }
